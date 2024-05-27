@@ -20,8 +20,9 @@ if(isset($_POST['submit'])){
 
 $selectstmt=$connection_db->query('select * from employees');
 $Alldata=$selectstmt->fetchAll(PDO::FETCH_CLASS,'employees');
+$Alldata=(is_array($Alldata)&&!empty($Alldata))?$Alldata:false;
 // echo '<pre>';
-// var_dump($result);
+// var_dump($Alldata);
 // echo '</pre>';
 
 
@@ -97,30 +98,26 @@ $Alldata=$selectstmt->fetchAll(PDO::FETCH_CLASS,'employees');
     </tr>
   </thead>
   <tbody>
+    <?php 
+    $cnt=0;
+    if($Alldata){
+    foreach($Alldata as $employee){
+        ++$cnt;
+    echo <<<"heredoc"
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
+      <th scope="row">$cnt</th>
+      <td>$employee->name</td>
+      <td>$employee->age</td>
+      <td>$employee->address</td>
+      <td>$employee->salary</td>
+      <td>$employee->tax</td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-    </tr>
+    heredoc;
+
+    }
+}else echo "<td colspan='6'>Sorry no Employee inserted </td>"
+    ?>
+    
   </tbody>
 </table>
 </div>

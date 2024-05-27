@@ -12,4 +12,7 @@
     //     $this->tax=$tax;
     //     $this->salary=$salary;
     // }
+    function calculatesalary(){
+        return $this->salary-($this->salary*$this->tax);
+    }
  };
