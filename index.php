@@ -1,6 +1,9 @@
 <?php
 require 'emp.class.php';
 require 'connection_db.php';
+echo "<pre>";
+var_dump($_GET);
+echo "</pre>";
 
 if(isset($_GET['action'])&&$_GET['action']=='edit' &&isset($_GET['id'])){
     $id=filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT);
@@ -23,7 +26,9 @@ if(isset($_GET['action'])&&$_GET['action']=='delete' &&isset($_GET['id'])){
     $id=filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT);
   $delsql='delete from employees where id=:id';
   $delstmt=$connection_db->prepare($delsql);
-  $delstmt->execute(array(':id'=>$id));
+  if($delstmt->execute(array(':id'=>$id))){
+    $message="Employee deleted successfuly";
+  };
 }
 
 /* inser user */
@@ -39,8 +44,6 @@ if(isset($_POST['submit'])){
    if(isset($_GET['action'])&&$_GET['action']=='edit' &&isset($_GET['id'])){
     $id=filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT);
     $inserstmt="update employees set name=:name,age=:age,address=:address,salary=:salary,tax=:tax where id=$id";
-    header('location:http://localhost/pdo');
-    exit();
    }else{
     $inserstmt="insert into employees(name,age,address,tax,salary) values(:name,:age,:address,:tax,:salary)";
 
@@ -57,6 +60,8 @@ $exe=$stmt->execute(array(':name'=>$emp_name,':age'=>$age,':address'=>$address,'
     $message="Employee $employee->name  saved successfuly";
   }
   else {$message="Error inserting Employee $employee->name ";$error=true;};
+  header('location:http://localhost/pdo');
+  exit();
 };
 $_POST=array();
 
@@ -158,7 +163,7 @@ $Alldata=(is_array($Alldata)&&!empty($Alldata))?$Alldata:false;
       <td>$employee->address</td>
       <td>$employee->salary L.E</td>
       <td>$employee->tax</td>
-      <td><a href="/pdo/?action=edit&id=$employee->id"><i class="fas fa fa-edit me-3"></a></i><a href="/pdo/?action=delete&id=$employee->id"><i class="fas fa fa-times"></a></i></td>
+      <td><a href="/pdo/?action=edit&id=$employee->id"><i class="fas fa fa-edit me-3"></a></i><a href="/pdo/?action=delete&id=$employee->id"  onclick="confirmdel()"><i class="fas fa fa-times"></a></i></td>
     </tr>
     heredoc;
 
@@ -171,7 +176,7 @@ $Alldata=(is_array($Alldata)&&!empty($Alldata))?$Alldata:false;
 
 </div>
 </div>
-
+<script src="script.js"></script>
 </body>
 </html>
 
